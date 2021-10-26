@@ -8,19 +8,19 @@ const getUsers = (req, res = response) => {
 
 const postUsers = (req, res = response) => {
   res.json({
-    msg: "post api",
+    msg: "post api - controller",
   });
 };
 
 const putUsers = (req, res = response) => {
   res.json({
-    msg: "put api",
+    msg: "put api - controller",
   });
 };
 
 const deleteUsers = (req, res = response) => {
   res.json({
-    msg: "delete api",
+    msg: "delete api - controller",
   });
 };
 
