@@ -1,4 +1,13 @@
 const { Router } = require("express");
+const { check } = require("express-validator");
+
+const {
+  validateRole,
+  validateEmail,
+  validateUserById,
+} = require("../helpers/db-validate");
+const { validateFields } = require("../middlewares/validateFields");
+
 const {
   getUsers,
   postUsers,
@@ -9,10 +18,36 @@ const router = Router();
 
 router.get("/", getUsers);
 
-router.post("/", postUsers);
+router.post(
+  "/",
+  [
+    check("name", "The name is required ").not().isEmpty(),
+    check("password", "Password must be at least 6 characters long ").isLength({
+      min: 6,
+    }),
+    check("email", "The email is not valid ").isEmail(),
+    check("email").custom(validateEmail),
+    // check("role", "Role not allowed ").isIn(["ADMIN_ROLE", "USER_ROLE"])
+    check("role").custom(validateRole),
+    validateFields,
+  ],
+  postUsers
+);
 
-router.put("/", putUsers);
+router.put(
+  "/:id",
+  [
+    check("id").custom(validateUserById),
+    check("role").custom(validateRole),
+    validateFields,
+  ],
+  putUsers
+);
 
-router.delete("/", deleteUsers);
+router.delete(
+  "/:id",
+  [check("id").custom(validateUserById), validateFields],
+  deleteUsers
+);
 
 module.exports = router;
