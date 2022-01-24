@@ -1,12 +1,13 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
 
+const { validateJWT, validateFields, hasRoles } = require("../middlewares/");
+
 const {
   validateRole,
   validateEmail,
   validateUserById,
 } = require("../helpers/db-validate");
-const { validateFields } = require("../middlewares/validateFields");
 
 const {
   getUsers,
@@ -46,7 +47,13 @@ router.put(
 
 router.delete(
   "/:id",
-  [check("id").custom(validateUserById), validateFields],
+  [
+    validateJWT,
+    hasRoles("ADMIN_ROLE", "USER_ROLE"),
+    // isAdminRole,
+    check("id").custom(validateUserById),
+    validateFields,
+  ],
   deleteUsers
 );
 

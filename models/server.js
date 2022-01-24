@@ -2,12 +2,14 @@ const express = require("express");
 const port = process.env.PORT;
 const cors = require("cors");
 const routerUser = require("../routes/user.routes");
+const routerPath = require("../routes/auth.routes");
 const { dbConnection } = require("../db/config.db");
 
 class Server {
   constructor() {
     this.app = express();
     this.usersPath = "/api/users";
+    this.authPath = "/api/auth";
 
     //connect DB
     this.dbConnection();
@@ -33,6 +35,7 @@ class Server {
     this.app.use(express.static("public"));
   }
   routes() {
+    this.app.use(this.authPath, routerPath);
     this.app.use(this.usersPath, routerUser);
   }
   listen() {
